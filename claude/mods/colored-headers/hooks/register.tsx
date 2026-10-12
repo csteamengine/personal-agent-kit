@@ -8,17 +8,32 @@ type Segment =
   | { kind: 'header'; level: number; text: string }
   | { kind: 'md'; text: string }
   | { kind: 'line'; text: string }
+  | { kind: 'gap' }
+
+const isBlank = (line: string) => line.trim() === ''
 
 const split = (text: string): Segment[] => {
   const out: Segment[] = []
   let md: string[] = []
   let isFenced = false
 
-  const flush = () => {
-    if (md.length > 0) {
-      out.push({ kind: 'md', text: md.join('\n') })
-      md = []
+  // Markdown drops blank lines at the edges of each chunk, so carry them
+  // across segment boundaries as explicit gaps.
+  const gap = () => {
+    if (out.length > 0 && out[out.length - 1].kind !== 'gap') {
+      out.push({ kind: 'gap' })
     }
+  }
+
+  const flush = () => {
+    let start = 0
+    let end = md.length
+    while (start < end && isBlank(md[start])) start++
+    while (end > start && isBlank(md[end - 1])) end--
+    if (start > 0) gap()
+    if (start < end) out.push({ kind: 'md', text: md.slice(start, end).join('\n') })
+    if (end < md.length && start < end) gap()
+    md = []
   }
 
   for (const line of text.split('\n')) {
@@ -43,6 +58,7 @@ const split = (text: string): Segment[] => {
     }
   }
   flush()
+  if (out.length > 0 && out[out.length - 1].kind === 'gap') out.pop()
 
   return out
 }
@@ -89,6 +105,9 @@ export const register: Register = on => {
                 {s.text}
               </Text>
             )
+          }
+          if (s.kind === 'gap') {
+            return <Text key={`g${i}`}> </Text>
           }
           if (s.kind === 'md') {
             return <Markdown key={`m${i}`} text={s.text} />
