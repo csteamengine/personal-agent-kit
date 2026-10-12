@@ -1,0 +1,32 @@
+{
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
+  "permissions": {
+    "additionalDirectories": [
+      "{{VAULT}}"
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "~/.claude/statusline.sh"
+  },
+  "hooks": {
+    "Notification": [
+      { "hooks": [ { "type": "command", "command": "~/.claude/sound-alert.sh" } ] }
+    ],
+    "PermissionRequest": [
+      { "hooks": [ { "type": "command", "command": "~/.claude/sound-alert.sh" } ] }
+    ],
+    "Stop": [
+      { "hooks": [ { "type": "command", "command": "afplay /System/Library/Sounds/Bottle.aiff" } ] }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "compact|resume|startup",
+        "hooks": [ { "type": "command", "command": "~/.claude/scripts/session-scratch-context.sh" } ]
+      }
+    ]
+  }
+}

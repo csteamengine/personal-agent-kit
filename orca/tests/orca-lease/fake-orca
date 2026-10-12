@@ -1,0 +1,11 @@
+#!/bin/bash
+# Fake orca for orca-lease tests. Alive workspaces: one path per line in $FAKE_DIR/alive.
+case "$1 $2" in
+  "worktree list")
+    jq -R -s '{result:{worktrees:[split("\n")[]|select(length>0)|{path:.,isArchived:false}]}}' "$FAKE_DIR/alive" ;;
+  "terminal list")
+    p="${4#path:}"; echo "{\"result\":{\"terminals\":[{\"handle\":\"shell-$(basename "$p")\",\"title\":\"zsh\"},{\"handle\":\"h-$(basename "$p")\",\"title\":\"claude\"}]}}" ;;
+  "terminal send")
+    [ -e "$FAKE_DIR/sendfail" ] && exit 1; echo "$4" >> "$FAKE_DIR/sends"; echo '{"ok":true}' ;;
+  *) exit 1 ;;
+esac

@@ -1,0 +1,17 @@
+#!/bin/bash
+# Fake orca for orca-status / orca-card-note tests. One card; state in $FAKE_DIR.
+st() { cat "$FAKE_DIR/status" 2>/dev/null || echo todo; }
+cm() { cat "$FAKE_DIR/comment" 2>/dev/null; }
+rec() { jq -n --arg s "$(st)" --arg c "$(cm)" '{path:"/w/A",isArchived:false,workspaceStatus:$s,comment:$c}'; }
+case "$1 $2" in
+  "worktree show"|"worktree current") jq -n --argjson w "$(rec)" '{ok:true,result:{worktree:$w}}' ;;
+  "worktree list") jq -n --argjson w "$(rec)" '{ok:true,result:{worktrees:[$w]}}' ;;
+  "worktree set")
+    shift 2
+    while [ $# -gt 0 ]; do case "$1" in
+      --workspace-status) printf '%s' "$2" > "$FAKE_DIR/status"; shift 2 ;;
+      --comment) printf '%s' "$2" > "$FAKE_DIR/comment"; shift 2 ;;
+      --worktree) shift 2 ;; *) shift ;; esac; done
+    echo '{"ok":true}' ;;
+  *) exit 1 ;;
+esac

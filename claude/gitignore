@@ -1,0 +1,17 @@
+# Allowlist: only hand-authored config is tracked. Everything else in
+# ~/.claude is session state, caches, history, or credentials.
+/*
+!/.gitignore
+!/CLAUDE.md
+!/settings.json
+!/statusline.sh
+!/sound-alert.sh
+!/obsidian-vaults.json
+!/agents/
+!/skills/
+!/hooks/
+!/scripts/
+
+# Harness-managed skill sync, not hand-authored
+/skills/synced/
+.DS_Store

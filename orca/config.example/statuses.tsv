@@ -1,0 +1,4 @@
+# label<TAB>id. Built-ins (Todo, In progress, In review, Done) need no entry.
+# Fill with: orca-status.sh learn --worktree path:<root> "<label>"
+Working	in-progress
+Needs me	in-review
