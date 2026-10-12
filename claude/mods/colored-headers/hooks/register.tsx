@@ -1,6 +1,6 @@
 import type { Register } from 'claude-code'
 
-const HEADER = ['#ff9e3d', '#7dcfff', '#ffc14d', '#9ad9ff'] as const
+const HEADER = ['#ff9e3d', '#ff9e3d', '#ffb366', '#ffb366'] as const
 const BOLD = '#ff9e3d'
 const CODE = '#7dcfff'
 
