@@ -1,0 +1,102 @@
+import type { Register } from 'claude-code'
+
+const HEADER = ['#ff9e3d', '#7dcfff', '#ffc14d', '#9ad9ff'] as const
+const BOLD = '#ff9e3d'
+const CODE = '#7dcfff'
+
+type Segment =
+  | { kind: 'header'; level: number; text: string }
+  | { kind: 'md'; text: string }
+  | { kind: 'line'; text: string }
+
+const split = (text: string): Segment[] => {
+  const out: Segment[] = []
+  let md: string[] = []
+  let isFenced = false
+
+  const flush = () => {
+    if (md.length > 0) {
+      out.push({ kind: 'md', text: md.join('\n') })
+      md = []
+    }
+  }
+
+  for (const line of text.split('\n')) {
+    if (/^\s*(```|~~~)/.test(line)) {
+      isFenced = !isFenced
+      md.push(line)
+      continue
+    }
+    if (isFenced || /^\s*\|/.test(line)) {
+      md.push(line)
+      continue
+    }
+    const h = /^(#{1,6})\s+(.*\S)\s*$/.exec(line)
+    if (h) {
+      flush()
+      out.push({ kind: 'header', level: h[1].length, text: h[2] })
+    } else if (/\*\*.+?\*\*/.test(line) && !/^\s*([-*>]|\d+\.)\s/.test(line) && !line.includes('](')) {
+      flush()
+      out.push({ kind: 'line', text: line })
+    } else {
+      md.push(line)
+    }
+  }
+  flush()
+
+  return out
+}
+
+export const register: Register = on => {
+  on('ui.render', { component: 'AssistantMessage' }, ($, e, next) => {
+    if (!/(^|\n)#{1,6}\s|\*\*.+?\*\*/.test(e.props.text)) {
+      return next(e)
+    }
+
+    const { Box, Text, Markdown } = $.ui.resolve(e)
+
+    const runs = (s: string) =>
+      s.split(/(\*\*.+?\*\*|`[^`]+`)/).map((part, i) => {
+        if (part.startsWith('**') && part.endsWith('**') && part.length > 4) {
+          return (
+            <Text key={`r${i}`} bold color={BOLD}>
+              {part.slice(2, -2)}
+            </Text>
+          )
+        }
+        if (part.startsWith('`') && part.endsWith('`') && part.length > 2) {
+          return (
+            <Text key={`r${i}`} color={CODE}>
+              {part.slice(1, -1)}
+            </Text>
+          )
+        }
+
+        return <Text key={`r${i}`}>{part}</Text>
+      })
+
+    return (
+      <Box flexDirection="column">
+        {split(e.props.text).map((s, i) => {
+          if (s.kind === 'header') {
+            return (
+              <Text
+                key={`h${i}`}
+                bold
+                underline={s.level === 1}
+                color={HEADER[Math.min(s.level, 4) - 1]}
+              >
+                {s.text}
+              </Text>
+            )
+          }
+          if (s.kind === 'md') {
+            return <Markdown key={`m${i}`} text={s.text} />
+          }
+
+          return <Text key={`r${i}`}>{runs(s.text)}</Text>
+        })}
+      </Box>
+    )
+  })
+}

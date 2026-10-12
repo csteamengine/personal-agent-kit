@@ -1,0 +1,31 @@
+{
+  "name": "Neon Contrast (high-contrast dark)",
+  "base": "dark",
+  "overrides": {
+    "text": "#f5f5f5",
+    "permission": "#ffb000",
+    "permissionShimmer": "#ffd066",
+    "claude": "#ff5fd2",
+    "claudeShimmer": "#ff9be6",
+    "inactive": "#9e9e9e",
+    "subtle": "#5f5f5f",
+    "suggestion": "#00e5ff",
+    "remember": "#b388ff",
+    "success": "#00ff87",
+    "error": "#ff3b5c",
+    "warning": "#ffd400",
+    "warningShimmer": "#ffe766",
+    "promptBorder": "#00e5ff",
+    "promptBorderShimmer": "#80f2ff",
+    "planMode": "#40c4ff",
+    "autoAccept": "#b388ff",
+    "bashBorder": "#ff5fd2",
+    "briefLabelYou": "#00e5ff",
+    "briefLabelClaude": "#ff5fd2",
+    "userMessageBackground": "#1a1a2e",
+    "diffAdded": "#0b4d2c",
+    "diffRemoved": "#5c1020",
+    "diffAddedWord": "#11804a",
+    "diffRemovedWord": "#9c1a35"
+  }
+}

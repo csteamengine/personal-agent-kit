@@ -1,0 +1,9 @@
+{
+  "name": "Daltonized Bright (dark-daltonized, lighter blues)",
+  "base": "dark-daltonized",
+  "overrides": {
+    "permission": "#7dcfff",
+    "permissionShimmer": "#a9e2ff",
+    "suggestion": "#7dcfff"
+  }
+}

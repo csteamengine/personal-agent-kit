@@ -1,0 +1,24 @@
+{
+  "name": "Terminal ANSI (follows terminal palette)",
+  "base": "dark-ansi",
+  "overrides": {
+    "text": "ansi:whiteBright",
+    "permission": "ansi:yellowBright",
+    "permissionShimmer": "ansi:yellow",
+    "claude": "ansi:magentaBright",
+    "claudeShimmer": "ansi:magenta",
+    "inactive": "ansi:white",
+    "subtle": "ansi:blackBright",
+    "suggestion": "ansi:cyanBright",
+    "remember": "ansi:blueBright",
+    "success": "ansi:greenBright",
+    "error": "ansi:redBright",
+    "warning": "ansi:yellow",
+    "promptBorder": "ansi:cyan",
+    "planMode": "ansi:blueBright",
+    "autoAccept": "ansi:magenta",
+    "bashBorder": "ansi:redBright",
+    "briefLabelYou": "ansi:cyanBright",
+    "briefLabelClaude": "ansi:magentaBright"
+  }
+}
